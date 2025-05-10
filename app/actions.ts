@@ -6,16 +6,40 @@ import path from "path";
 
 export async function enterTime(
     time_state: TimeState,
-    setData: Dispatch<SetStateAction<object>>,
+    setData: Dispatch<
+        SetStateAction<{
+            [key: string]: {
+                start_day: string;
+                start_lunch: string;
+                end_lunch: string;
+                end_day: string;
+            };
+        }>
+    >,
 ) {}
 
 export async function deleteTime(
     time_state: TimeState,
-    setData: Dispatch<SetStateAction<object>>,
+    setData: Dispatch<
+        SetStateAction<{
+            [key: string]: {
+                start_day: string;
+                start_lunch: string;
+                end_lunch: string;
+                end_day: string;
+            };
+        }>
+    >,
 ) {}
 
 async function saveData(data: object) {
     const data_to_write = JSON.stringify(data);
     const file_path = path.join(process.cwd(), "public", "data.json");
     await fs.writeFile(file_path, data_to_write);
+}
+
+export async function loadData() {
+    const file_path = path.join(process.cwd(), "public", "data.json");
+    const raw = await fs.readFile(file_path, "utf8");
+    return JSON.parse(raw);
 }

@@ -15,8 +15,19 @@ const button_types = [
     TimeState.end_day,
 ];
 
-export default function HourSet() {
-    const [dayData, setDayData] = useState<object>({});
+interface Props {
+    data: {
+        [key: string]: {
+            start_day: string;
+            start_lunch: string;
+            end_lunch: string;
+            end_day: string;
+        };
+    };
+}
+
+export default function HourSet({ data }: Readonly<Props>) {
+    const [dayData, setDayData] = useState(data);
     const [buttonAvailable, setButtonAvalaible] = useState(0);
     async function setTime(time_state: TimeState) {
         await enterTime(time_state);
