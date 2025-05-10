@@ -1,5 +1,4 @@
 "use server";
-import { Dispatch, SetStateAction } from "react";
 import { TimeState } from "./types";
 import fs from "fs/promises";
 import path from "path";
@@ -10,9 +9,12 @@ export async function enterTime(
     data: { [key: string]: Date[] },
     key: string,
 ) {
+    console.log("day data:", data[key]);
     const new_data = {
         ...data,
-        [key]: [...data[key], moment().toDate()],
+        [key]: data[key]
+            ? [...data[key], moment().toDate()]
+            : [moment().toDate()],
     };
     saveData(new_data);
 

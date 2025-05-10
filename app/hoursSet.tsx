@@ -19,16 +19,19 @@ interface Props {
     data: {
         [key: string]: Date[];
     };
+    setDataAction: (data: { [key: string]: Date[] }) => void;
 }
 
-export default function HourSet({ data }: Readonly<Props>) {
-    const [dayData, setDayData] = useState(data);
+export default function HourSet({ data, setDataAction }: Readonly<Props>) {
     const today = moment().format("YYYY/MM/DD");
-    const [buttonAvailable, setButtonAvalaible] = useState(
-        dayData[today] ? dayData[today].length : 0,
-    );
+    const [buttonAvailable, setButtonAvalaible] = useState(0);
+
+    useEffect(() => {
+        setButtonAvalaible(data[today] ? data[today].length : 0);
+    }, [data, today]);
+
     async function setTime(time_state: TimeState) {
-        setDayData(await enterTime(time_state, dayData, today));
+        setDataAction(await enterTime(time_state, data, today));
         toast(`${time_state} at ${moment().format("HH:mm")}`, {
             description: (
                 <span className="text-black">Set for the day {today}</span>
@@ -38,8 +41,8 @@ export default function HourSet({ data }: Readonly<Props>) {
     }
 
     useEffect(() => {
-        console.log(dayData);
-    }, [dayData]);
+        console.log(data);
+    }, [data]);
 
     return (
         <div className="m-6 flex justify-center space-x-4">
