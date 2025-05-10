@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { enterTime } from "./actions";
 import { TimeState } from "./types";
@@ -17,28 +17,29 @@ const button_types = [
 
 interface Props {
     data: {
-        [key: string]: {
-            start_day: string;
-            start_lunch: string;
-            end_lunch: string;
-            end_day: string;
-        };
+        [key: string]: string[];
     };
 }
 
 export default function HourSet({ data }: Readonly<Props>) {
     const [dayData, setDayData] = useState(data);
-    const [buttonAvailable, setButtonAvalaible] = useState(0);
+    const today = moment().format("YYYY/MM/DD");
+    const [buttonAvailable, setButtonAvalaible] = useState(
+        dayData[today] ? dayData[today].length : 0,
+    );
     async function setTime(time_state: TimeState) {
-        await enterTime(time_state);
+        setDayData(await enterTime(time_state, dayData, today));
         toast(`${time_state} at ${moment().format("HH:mm")}`, {
-            description: `Set for the day ${moment().format("YYYY/MM/DD")}`,
-            descriptionClassName: "text-black",
-            style: {
-                backgroundColor: "#6afea0",
-            },
+            description: (
+                <span className="text-black">Set for the day {today}</span>
+            ),
+            className: "!bg-lime-200",
         });
     }
+
+    useEffect(() => {
+        console.log(dayData);
+    }, [dayData]);
 
     return (
         <div className="m-6 flex justify-center space-x-4">
