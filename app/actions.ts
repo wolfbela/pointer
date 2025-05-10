@@ -7,28 +7,21 @@ import moment from "moment";
 
 export async function enterTime(
     time_state: TimeState,
-    data: { [key: string]: string[] },
+    data: { [key: string]: Date[] },
     key: string,
 ) {
     const new_data = {
         ...data,
-        [key]: [...data[key], moment().format("HH:mm")],
+        [key]: [...data[key], moment().toDate()],
     };
     saveData(new_data);
 
     return new_data;
 }
 
-export async function deleteTime(
-    time_state: TimeState,
-    setData: Dispatch<
-        SetStateAction<{
-            [key: string]: [Date];
-        }>
-    >,
-) {}
+export async function deleteTime(time_state: TimeState) {}
 
-async function saveData(data: { [key: string]: string[] }) {
+async function saveData(data: { [key: string]: Date[] }) {
     const data_to_write = JSON.stringify(data);
     const file_path = path.join(process.cwd(), "public", "data.json");
     await fs.writeFile(file_path, data_to_write);

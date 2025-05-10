@@ -17,7 +17,7 @@ const button_types = [
 
 interface Props {
     data: {
-        [key: string]: string[];
+        [key: string]: Date[];
     };
 }
 
